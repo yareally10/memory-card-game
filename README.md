@@ -1,6 +1,6 @@
 This is a single page React app. The app is a simple memory card game, where the player click on cards and try to match all the cards. The size of the board can be updated based on user input.
 
-Play the game [here](http://www.yareally.net/memory-card-game/)!
+Play the game [http://yareally10.github.io/memory-card-game/](http://yareally10.github.io/memory-card-game/)!
 
 The base file is taken from the React tutorial [here](https://raw.githubusercontent.com/reactjs/reactjs.org/master/static/html/single-file-example.html).
 
