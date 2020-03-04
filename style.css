@@ -1,0 +1,70 @@
+:root {
+  --rowNum: 4;
+  --colNum: 4;
+  --gridHeight: 60px;
+}
+
+html, body, #root {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+.cardsContainer {
+	margin-top: 20px;
+	display: grid;
+	grid-template-rows: repeat(var(--rowNum), var(--gridHeight));
+  	grid-template-columns: repeat(var(--colNum), auto);
+}
+
+.card {
+ 	grid-column-start: auto;
+ 	grid-row-start: auto;
+ 	margin: 5px;
+ 	height: 50px;
+	text-align: center;
+	margin-top: auto;
+	font-size: 2.5em;
+	border-radius: 10px;
+	border: 2px solid white;
+	display: block;
+}
+
+.card.A {
+	background: red;
+}
+
+.card.B {
+	background: blue;
+	color: white;
+}
+
+.card.C {
+	background: green;
+	color: white;
+}
+
+.card.D {
+	background: gold;
+	color: black;
+}
+
+.card.E {
+	background: yellow;
+	color: black;
+}
+
+.card.F {
+	background: indigo;
+	color: white;
+}
+
+.card.G {
+	background: orange;
+	color: black;
+}
+
+.card.X {
+	background: black;
+	color: black;
+}
