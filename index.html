@@ -68,7 +68,10 @@ class Game extends React.Component {
 	}
 
 	handleColumnChange({target}) {
-		let val = target.value;
+		let val = parseInt(target.value);
+		if (isNaN(val)) {
+			val = 4;
+		}
 		val = val > 24 ? 24 : val;
 		this.setState({columns: val});
 	}
