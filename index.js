@@ -1,7 +1,7 @@
 const Card = props => (
 	<div 
 		className={props.matched || props.clicked ? 'card ' + props.type : 'card X'}
-		id={'card ' + props.id}
+		id={'card' + props.id}
 		onClick={() => props.click(props.id)}
 	>
 		<span>{props.matched || props.clicked ? props.type : 'X'}</span>
@@ -121,6 +121,8 @@ class Game extends React.Component {
 			card2.type = possibleCards[temp];
 			card2.matched = false;
 			card2.clicked = false;
+			card1.id = i;
+			card2.id = i+1;
 			cards.push(card1);
 			cards.push(card2);
 		}
