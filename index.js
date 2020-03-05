@@ -27,6 +27,9 @@ class Game extends React.Component {
 		};
 
 		this.click = this.click.bind(this)
+
+		document.documentElement.style.setProperty("--colNum", this.numColumns);
+		document.documentElement.style.setProperty("--rowNum", this.numRows);
 	}
 
 	reset() {
@@ -50,6 +53,7 @@ class Game extends React.Component {
 
 	handleColumnChange({target}) {
 		let val = target.value;
+		val = val > 24 ? 24 : val;
 		this.setState({columns: val});
 	}
 
@@ -75,6 +79,7 @@ class Game extends React.Component {
 				this.hasWon = newCardsRemain === 0;
 				this.setState({cards: newCards, score: newScore, cardsRemain: newCardsRemain, cardPicked: null});
 			} else {
+				//wait half a second to hide cards
 				setTimeout(() => {
 						this.hideCards(this.state.cardPicked, currCard);
 						this.setState({cardPicked: null, score: newScore});
@@ -156,9 +161,9 @@ class Game extends React.Component {
 				<h1>Moves: {this.state.score}</h1>
 				<h1>{this.hasWon ? 'You have won!' : ''}</h1>
 				<div>
-					<span>Size</span><input type="text" value={this.state.columns} onChange={() => this.handleColumnChange(event)}/>
+					<span>Columns: </span><input type="text" value={this.state.columns} onChange={() => this.handleColumnChange(event)}/>
+					<button onClick={() => this.reset()}>reset</button>
 				</div>
-				<button onClick={() => this.reset()}>reset</button>
 				<div className="cardsContainer">
 					{cards}
 				</div>

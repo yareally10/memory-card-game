@@ -10,6 +10,20 @@ html, body, #root {
 	height: 100%;
 }
 
+button {
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+input[type=text] {
+    padding: 10px;
+    margin: 10px;
+    box-sizing: border-box;  
+}
+
 .cardsContainer {
 	margin-top: 20px;
 	display: grid;
