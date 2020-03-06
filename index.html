@@ -32,10 +32,9 @@ class Game extends React.Component {
 		this.numColumns = 4;
 		this.numRows = 4;
 		this.numCards = this.numColumns * this.numRows;
-		let cards = this.initCards(this.numCards);
 
 		this.state = {
-			cards: cards,
+			cards: this.initCards(this.numCards),
 			cardPicked: null,
 			score: 0,
 			columns: this.numColumns,
@@ -51,15 +50,12 @@ class Game extends React.Component {
 	reset() {
 		this.numColumns = this.state.columns;
 		this.numCards = this.numColumns * this.numRows;
-		let cards = this.initCards(this.numCards);
-
 		this.hasWon = false;
 
 		this.setState({
-			cards: cards,
+			cards: this.initCards(this.numCards),
 			cardPicked: null,
 			score: 0,
-			columns: this.numColumns,
 			cardsRemain: this.numCards
 		});
 
@@ -69,10 +65,9 @@ class Game extends React.Component {
 
 	handleColumnChange({target}) {
 		let val = parseInt(target.value);
-		if (isNaN(val)) {
+		if (isNaN(val) || val <= 0) {
 			val = 4;
 		}
-		val = val > 24 ? 24 : val;
 		this.setState({columns: val});
 	}
 
@@ -81,27 +76,35 @@ class Game extends React.Component {
 		//console.log(currCard);
 
 		//validate input
-		if (currCard.matched || (this.state.cardPicked != null && currCard.id === this.state.cardPicked.id)) {
+		if (currCard.matched || currCard.clicked) {
 			return;
 		}
+
+		//show current card
 		this.showCard(currCard);
 
-		if (this.state.cardPicked == null) {
+		//check current card
+		if (this.state.cardPicked === null) {
 			this.setState({cardPicked: currCard});
 		} else {
-			let newScore = this.state.score;
-			newScore++;
 			if (currCard.type === this.state.cardPicked.type) {
-				const newCards = this.cardMatched(this.state.cardPicked, currCard);
-				let newCardsRemain = this.state.cardsRemain;
-				newCardsRemain -= 2;
-				this.hasWon = newCardsRemain === 0;
-				this.setState({cards: newCards, score: newScore, cardsRemain: newCardsRemain, cardPicked: null});
+				const newState = {
+					cards: this.cardsMatched(this.state.cardPicked, currCard),
+					score: this.state.score + 1,
+					cardsRemain: this.state.cardsRemain - 2,
+					cardPicked: null
+				}
+				this.hasWon = newState.cardsRemain === 0;
+				this.setState(newState);
 			} else {
 				//wait half a second to hide cards
 				setTimeout(() => {
-						this.hideCards(this.state.cardPicked, currCard);
-						this.setState({cardPicked: null, score: newScore});
+						const newState = {
+							cards: this.hideCards(this.state.cardPicked, currCard),
+							score: this.state.score + 1,
+							cardPicked: null
+						}
+						this.setState(newState);
 					}, 
 					500
 				);
@@ -119,10 +122,10 @@ class Game extends React.Component {
 		const newCards = this.state.cards.slice();
 		newCards[card1.id].clicked = false;
 		newCards[card2.id].clicked = false;
-		this.setState({cards: newCards});
+		return newCards;
 	}
 
-	cardMatched(card1, card2) {
+	cardsMatched(card1, card2) {
 		const newCards = this.state.cards.slice();
 		newCards[card1.id].matched = true;
 		newCards[card2.id].matched = true;
@@ -130,14 +133,16 @@ class Game extends React.Component {
 	}
 
 	initCards(num) {
-		const possibleCards = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-		const cards = [];
+		const possibleCards = ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+					cards = [];
 		for(let i=0; i<num; i+=2) {
-			let card1 = {}, card2 = {}, temp = Math.floor(Math.random()*possibleCards.length);
-			card1.type = possibleCards[temp];
+			let card1 = {}, 
+					card2 = {}, 
+					type = Math.floor(Math.random()*possibleCards.length);
+			card1.type = possibleCards[type];
 			card1.matched = false;
 			card1.clicked = false;
-			card2.type = possibleCards[temp];
+			card2.type = possibleCards[type];
 			card2.matched = false;
 			card2.clicked = false;
 			card1.id = i;
@@ -145,15 +150,15 @@ class Game extends React.Component {
 			cards.push(card1);
 			cards.push(card2);
 		}
-
 		return this.randomizeCards(cards);
 	}
 
+	//shuffle cards 100 times
 	randomizeCards(cards) {
 		for(let i=0; i<100; i++) {
 			let index1 = Math.floor(Math.random()*cards.length),
-				index2 = Math.floor(Math.random()*cards.length),
-				temp;
+					index2 = Math.floor(Math.random()*cards.length),
+					temp;
 			temp = cards[index1];
 			cards[index1] = cards[index2];
 			cards[index2] = temp;
@@ -176,13 +181,15 @@ class Game extends React.Component {
 							 />
 						)
 					});
+
 		return (
 			<div className="container">
 				<h1>Welcome to card memory game!</h1>
 				<h1>Moves: {this.state.score}</h1>
 				<h1>{this.hasWon ? 'You have won!' : ''}</h1>
 				<div>
-					<span>Columns: </span><input type="text" value={this.state.columns} onChange={() => this.handleColumnChange(event)}/>
+					<span>Columns: </span>
+					<input type="text" value={this.state.columns} onChange={() => this.handleColumnChange(event)}/>
 					<button onClick={() => this.reset()}>reset</button>
 				</div>
 				<div className="cardsContainer">
