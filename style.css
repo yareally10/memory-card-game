@@ -41,7 +41,6 @@ input[type=text] {
  	grid-column-start: auto;
  	grid-row-start: auto;
  	margin: 5px;
- 	height: 150px;
 	text-align: center;
 	font-size: 2.5em;
 	border-radius: 10px;
